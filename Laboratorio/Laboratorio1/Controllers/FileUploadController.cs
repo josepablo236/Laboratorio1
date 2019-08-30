@@ -32,7 +32,7 @@ namespace Laboratorio1.Controllers
                     if (Path.GetExtension(file.FileName) == ".txt")
                     {
                         //Me va a devolver la ruta en la que se encuentra la carpeta "Archivos" 
-                        string path = Path.Combine(Server.MapPath("~/Archivos"),
+                        string path = Path.Combine(Server.MapPath("~/Archivo"),
                                       //Toma el nombre del archivo
                                       Path.GetFileName(file.FileName));
                         //Entonces path, va a ser igual a la ruta +  el nombre del archivo
@@ -56,7 +56,7 @@ namespace Laboratorio1.Controllers
 
         private List<string> FilesUploaded()
         {
-            var dir = new System.IO.DirectoryInfo(Server.MapPath("~/Archivos"));
+             var dir = new System.IO.DirectoryInfo(Server.MapPath("~/Archivo"));
             //Unicamente tome los archivos de text, ahorita lo puse como doc para probar pero al final lo podriamos dejar como .txt
             System.IO.FileInfo[] fileNames = dir.GetFiles("*.txt");
             //Creo una lista con los nombres de todos los archivos para luego poder mostrarlos
@@ -72,7 +72,7 @@ namespace Laboratorio1.Controllers
         // Este lo vamos a usar luego que ya podamos descomprimir jajaja
         public FileResult Download(string TxtName)
         {
-            var FileVirtualPath = "~/Archivos/" + TxtName;
+            var FileVirtualPath = "~/Archivo/" + TxtName;
             return File(FileVirtualPath, "application/force- download", Path.GetFileName(FileVirtualPath));
         }
         public ActionResult Read(string TxtName)
