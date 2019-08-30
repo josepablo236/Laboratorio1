@@ -49,52 +49,12 @@ namespace Laboratorio1.Controllers
                     Diccionario_Caracteres.Add(letra, 1);
                 }
             }
-            //Creamos los nodos, y guardamos la probabilidad y el caracter.
-            foreach (var item in Diccionario_Caracteres)
-            {
-                NodoHuffman nodotemp = new NodoHuffman();
-                nodotemp.probabilidad = item.Value / Text_archivo.Length;
-                nodotemp.caracter = item.Key;
-                listadeNodos.Add(nodotemp);
-            }
-            AgregarNodoAlArbol();
-        }
 
-        //Procedimiento que ordena la lista de nodos por su probabilidad ascendentemente
-        public void OrdenamientoListaNodos()
-        {
-            listadeNodos.OrderBy(x => x.probabilidad);
-        }
-
-        public void AgregarNodoAlArbol()
-        {
-            if (listadeNodos.Count > 1)
-            {
-                NodoHuffman nodotemp = new NodoHuffman();
-                nodotemp.probabilidad = (listadeNodos[0].probabilidad + listadeNodos[1].probabilidad);
-                nodotemp.caracter = Convert.ToChar("x");
-                if (listadeNodos[0].probabilidad != listadeNodos[1].probabilidad)
-                {
-                    if (listadeNodos[0].probabilidad < listadeNodos[1].probabilidad)
-                    {
-                        nodotemp.HijoDerecho = listadeNodos[0];
-                    }
-                    else
-                    {
-                        nodotemp.HijoIzquierdo = listadeNodos[1];
-                    }
-                }
-                else {
-                    nodotemp.HijoIzquierdo = listadeNodos[0];
-                    nodotemp.HijoDerecho = listadeNodos[1];
-                }
-
-                listadeNodos.RemoveAt(0);
-                listadeNodos.RemoveAt(1);
-                listadeNodos.Add(nodotemp);
-                OrdenamientoListaNodos();
-                AgregarNodoAlArbol();
-            }
+            ArbolHuff arbol = new ArbolHuff();
+            //Manda a llamar el metodo del arbol en el que agrega a una lista de nodos, los distintos caracteres que existen
+            arbol.agregarNodos(Diccionario_Caracteres, Text_archivo, listadeNodos);
+         
+         }
+        
         }
     }
-}
