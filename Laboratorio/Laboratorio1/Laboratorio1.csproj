@@ -126,6 +126,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ArbolHuffman\ArbolHuffman.cs" />
+    <Compile Include="ArbolHuffman\Nodo.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReadTextController.cs" />
@@ -175,10 +177,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Archivo\" />
     <Folder Include="Models\" />
     <Folder Include="Views\ReadFile\" />
-    <Folder Include="Views\ReadText\" />
-    <Folder Include="Archivo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
