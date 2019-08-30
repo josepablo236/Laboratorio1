@@ -18,45 +18,42 @@ namespace Laboratorio1.Controllers
 
         int i = 0;
         int[] letras;
+        //Guardaremos la letra y cuantas veces se repite
+        public Dictionary<char, int> Diccionario_Caracteres = new Dictionary<char, int>();
         //Recibo los datos de FileUploadController
 
         public void Read(string filename)
         {
             int[] letras_contador = new int[100];
-            string path = Path.Combine(Server.MapPath("~/Archivos"), filename);
+            string path = Path.Combine(Server.MapPath("~/Archivo"), filename);
             System.IO.StreamReader Leer = new System.IO.StreamReader(path);
-            string lector = "a";
-
+            string Text_archivo = "a";
             //Leo todo el archivo de texto
             while (!Leer.EndOfStream)
             {
-                lector = Leer.ReadToEnd();
+                Text_archivo = Leer.ReadToEnd();
             }
-            //Tomo cada caracter de todo el texto
-            int contador_letras = 0;
 
-            foreach (char letra in lector)
+          //  En el diccionario cuenta cuantas veces se repite cada caracter (char, cantidad de repeticiones)
+            foreach (char letra in Text_archivo)
             {
-                CheckIfStringContain(letra);
-            }
-            bool CheckIfStringContain(char myChar)
-            {
-                bool myBool = false;
-                char[] a = lector.ToCharArray();
-                for (int i = 0; i < lector.Length - 1; i++)
+                if (Diccionario_Caracteres.ContainsKey(letra) == true)
                 {
-                    if (a[i] == myChar)
-                    {
-                        myBool = true;
-                        break;
-                    }
-                    else { contador_letras++; }
+                    Diccionario_Caracteres[letra] += 1;
                 }
-                return myBool;
+                else
+                {
+                    Diccionario_Caracteres.Add(letra, 1);
+                }
+
             }
+            
+            ViewBag(Diccionario_Caracteres);
+            //Procedimiento
+         /*  
             char[] letras = new char[100];
-            letras[0] = Convert.ToChar(lector.FirstOrDefault());
-            foreach (char word in lector)
+            letras[0] = Convert.ToChar(Text_archivo.FirstOrDefault());
+            foreach (char word in Text_archivo)
             {
                 if (letras[0] == null)
                 {
@@ -170,7 +167,7 @@ namespace Laboratorio1.Controllers
                     }
                 }
                 */
-
+                
 
     }
 }
