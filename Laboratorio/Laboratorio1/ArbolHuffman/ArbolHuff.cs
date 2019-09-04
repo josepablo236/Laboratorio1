@@ -40,10 +40,23 @@ namespace Laboratorio1.ArbolHuffman
                 //Ya que cuando es un nodo, producto de la suma de 2 letras, no nos importa el caracter, solo su probabilidad
                 nodotemp.caracter = Convert.ToChar("x");
                 //El nodo con menor probabilidad se convierte en el hijo derecha.
-
-                nodotemp.HijoIzquierdo = listaNodos[0];
-                nodotemp.HijoDerecho = listaNodos[1];
-
+                if (Math.Abs(listadeNodos[0].probabilidad - listadeNodos[1].probabilidad) > EPSILON)
+                {
+                    if (listadeNodos[0].probabilidad < listadeNodos[1].probabilidad)
+                    {
+                        nodotemp.HijoDerecho = listadeNodos[0];
+                    }
+                    else
+                    {
+                        nodotemp.HijoIzquierdo = listadeNodos[1];
+                    }
+                }
+                //No importa si es iz o derecha, ya que son iguales
+                else
+                {
+                    nodotemp.HijoIzquierdo = listadeNodos[0];
+                    nodotemp.HijoDerecho = listadeNodos[1];
+                }
                 //Eliminamos los 2 mas pequeños de la lista, ya que forman un nuevo nodo, y se vuelven hijos del nuevo nodo
                 listaNodos.RemoveAt(0);
                 listaNodos.RemoveAt(0);
