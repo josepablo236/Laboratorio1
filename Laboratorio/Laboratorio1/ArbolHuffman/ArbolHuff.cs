@@ -16,7 +16,7 @@ namespace Laboratorio1.ArbolHuffman
         {
             foreach (var item in Diccionario_Caracteres)
             {
-                NodoHuffman nodotemp = new NodoHuffman();
+                var nodotemp = new NodoHuffman();
                 nodotemp.probabilidad = Math.Round((item.Value / Convert.ToDouble(Text_archivo.Count)),5); //Calcula la probabilidad
                 nodotemp.caracter = item.Key;                             //El caracter es la llave primaria
                 listadeNodos.Add(nodotemp);                               //Agrega cada nuevo nodo a una lista de nodos
@@ -36,7 +36,7 @@ namespace Laboratorio1.ArbolHuffman
             //Ya que deben de existir minimo 2 nodos para poder emparejarlos
             if (listaNodos.Count > 2)
             {
-                NodoHuffman nodotemp = new NodoHuffman();
+                var nodotemp = new NodoHuffman();
                 //La probabilidad del nodo es la suma de la probabilidad de sus nodos hijos, iz y derecha.
                 nodotemp.probabilidad = (listaNodos[0].probabilidad + listaNodos[1].probabilidad);
                 //Ya que cuando es un nodo, producto de la suma de 2 letras, no nos importa el caracter, solo su probabilidad
@@ -64,10 +64,9 @@ namespace Laboratorio1.ArbolHuffman
                 nodotemp.probabilidad = (listaNodos[0].probabilidad + listaNodos[1].probabilidad);
                 //Ya que cuando es un nodo, producto de la suma de 2 letras, no nos importa el caracter, solo su probabilidad
                 nodotemp.caracter = Convert.ToString("x");
-                nodotemp.HijoIzquierdo = listaNodos[0];
-                nodotemp.HijoDerecho = listaNodos[1];
+                nodotemp.HijoIzquierdo = listaNodos[1];
+                nodotemp.HijoDerecho = listaNodos[0];
                 Arbol.Add(nodotemp);
-                nodotemp.codigo = "1";
                 Codigo(nodotemp);
             }
         }
@@ -81,12 +80,12 @@ namespace Laboratorio1.ArbolHuffman
 
         public void Codigo(NodoHuffman nodo)
         {
-            if (nodo.HijoIzquierdo.codigo == null && nodo.HijoIzquierdo != null)
+            if (nodo.HijoIzquierdo != null)
             {
                 nodo.HijoIzquierdo.codigo = nodo.codigo + "0";
                 Codigo(nodo.HijoIzquierdo);
             }
-            if (nodo.HijoDerecho.codigo == null && nodo.HijoDerecho != null)
+            if (nodo.HijoDerecho != null)
             {
                 nodo.HijoDerecho.codigo = nodo.codigo + "1";
                 Codigo(nodo.HijoDerecho);
@@ -95,7 +94,6 @@ namespace Laboratorio1.ArbolHuffman
             {
                 codigos.Add(nodo.caracter, nodo.codigo);
             }
-
         }
     }
 }
