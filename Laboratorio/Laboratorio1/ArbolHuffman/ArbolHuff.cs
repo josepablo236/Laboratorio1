@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -11,7 +12,7 @@ namespace Laboratorio1.ArbolHuffman
     {
         public double EPSILON { get; private set; }
         public object Covert { get; private set; }
-
+        const int bufferLength = 8;
         public static List<NodoHuffman> listaNodos;
         List<NodoHuffman> Arbol = new List<NodoHuffman>();
         List<NodoHuffman> ArbolCodigos = new List<NodoHuffman>();
@@ -20,8 +21,7 @@ namespace Laboratorio1.ArbolHuffman
         public Dictionary<string, string> codigos = new Dictionary<string, string>();
         string TextoEnCodigo;
         List<string> TextoAscii = new List<string>();
-        string textocodificado;
-
+        List<string> textocodificado = new List<string>();
         //Recibe el string de caracteres y los agrega a un dicctionario, con su respectiva probabilidad y caracter, para luego crear los nodos
         public void agregarNodos(Dictionary<string, int> Diccionario_Caracteres, List<string> Text_archivo, List<NodoHuffman> listadeNodos)
         {
@@ -98,30 +98,47 @@ namespace Laboratorio1.ArbolHuffman
                 string lado = "raiz";
                 Codigo(nodotemp, nodotemp,lado);
                 GenerarTextoCodigo(Diccionariocodigos);
-                AgruparTextoCodigo(TextoEnCodigo);
-            }
-        }
-        public void AgruparTextoCodigo(string textocodigo)
-        {
-            if (textocodigo.Length > 8)
-            {
-                TextoAscii.Add(textocodigo.Substring(0, 8));
-                textocodigo = textocodigo.Remove(0, 8);
-                AgruparTextoCodigo(textocodigo);
-            }
-            else { TextoAscii.Add(textocodigo); }
-        }
-
-        public void ConvertirAscii(List<string> grupos)
-        {
-            foreach (string group in grupos)
-            {
-                var bytes = Encoding.ASCII.GetBytes(group);
-                string newText = Encoding.ASCII.GetString(bytes);
-                textocodificado += newText;
+                Agrupar();
             }
         }
 
+        public void Agrupar()
+        {
+            using (var writeStream1 = new FileStream("C:\\Users\\user\\Documents\\Lab Estructura de datos II\\diccionario.huff", FileMode.OpenOrCreate))
+            {
+                using (var writer2 = new StreamWriter(writeStream1))
+                {
+                    foreach (var item in Diccionariocodigos)
+                    {
+                        writer2.Write(item);
+                    }
+                }
+            }
+            using (var writeStream2 = new FileStream("C:\\Users\\user\\Documents\\Lab Estructura de datos II\\archivo.huff", FileMode.OpenOrCreate))
+            {
+                using (var writer = new BinaryWriter(writeStream2))
+                {
+                    List<Byte> listabytes = BinaryToString(TextoEnCodigo);
+
+                    foreach (var item in listabytes)
+                    {
+                        writer.Write(item);
+                    }
+                }
+            }  
+        }
+
+
+        public static List<Byte> BinaryToString(string data)
+        {
+            List<Byte> byteList = new List<Byte>();
+            for (int i = 0; i < data.Length; i += 8)
+            {
+                byteList.Add(Convert.ToByte(data.Substring(i, 8), 2));
+            }
+            
+            return byteList;
+        }
         public bool EsHoja(NodoHuffman nodo)
         {
             if (nodo.HijoIzquierdo == null && nodo.HijoIzquierdo == null)
