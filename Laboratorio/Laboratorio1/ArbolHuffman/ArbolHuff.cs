@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,13 +10,22 @@ namespace Laboratorio1.ArbolHuffman
     public class ArbolHuff
     {
         public double EPSILON { get; private set; }
+        public object Covert { get; private set; }
+
         public static List<NodoHuffman> listaNodos;
         List<NodoHuffman> Arbol = new List<NodoHuffman>();
         List<NodoHuffman> ArbolCodigos = new List<NodoHuffman>();
+        public static List<string> texto = new List<string>();
+        Dictionary<string, string> Diccionariocodigos = new Dictionary<string, string>();
         public Dictionary<string, string> codigos = new Dictionary<string, string>();
+        string TextoEnCodigo;
+        List<string> TextoAscii = new List<string>();
+        string textocodificado;
+
         //Recibe el string de caracteres y los agrega a un dicctionario, con su respectiva probabilidad y caracter, para luego crear los nodos
         public void agregarNodos(Dictionary<string, int> Diccionario_Caracteres, List<string> Text_archivo, List<NodoHuffman> listadeNodos)
         {
+            texto = Text_archivo;
             foreach (var item in Diccionario_Caracteres)
             {
                 var nodotemp = new NodoHuffman();
@@ -31,16 +41,11 @@ namespace Laboratorio1.ArbolHuffman
             listaNodos = listadeNodos.OrderBy(x => x.probabilidad).ToList();
         }
         //Recibe la lista de notos de agregarNodos
-        public ActionResult MostrarArbol(List<NodoHuffman> arbol)
-        {
-            return View(arbol);
-        }
-
-        private ActionResult View(List<NodoHuffman> arbol)
+        private ActionResult View(string arbol)
         {
             throw new NotImplementedException();
-
         }
+
 
         public void AgregarNodoAlArbol(List<NodoHuffman> listadeNodos)
         {
@@ -92,7 +97,28 @@ namespace Laboratorio1.ArbolHuffman
                 Arbol.Add(nodotemp);
                 string lado = "raiz";
                 Codigo(nodotemp, nodotemp,lado);
-                MostrarArbol(ArbolCodigos);
+                GenerarTextoCodigo(Diccionariocodigos);
+                AgruparTextoCodigo(TextoEnCodigo);
+            }
+        }
+        public void AgruparTextoCodigo(string textocodigo)
+        {
+            if (textocodigo.Length > 8)
+            {
+                TextoAscii.Add(textocodigo.Substring(0, 8));
+                textocodigo = textocodigo.Remove(0, 8);
+                AgruparTextoCodigo(textocodigo);
+            }
+            else { TextoAscii.Add(textocodigo); }
+        }
+
+        public void ConvertirAscii(List<string> grupos)
+        {
+            foreach (string group in grupos)
+            {
+                var bytes = Encoding.ASCII.GetBytes(group);
+                string newText = Encoding.ASCII.GetString(bytes);
+                textocodificado += newText;
             }
         }
 
@@ -120,13 +146,23 @@ namespace Laboratorio1.ArbolHuffman
             {
                 if (lado == "iz")
                 { nodo.codigo = nodopadre.codigo + "0";
-                    ArbolCodigos.Add(nodo);
- }
+                    Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
+                }
                 if (lado == "der")
                 { nodo.codigo = nodopadre.codigo + "1";
-                    ArbolCodigos.Add(nodo);
+                    Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
                 }
             }
         }
+        //Agarro cada codigo en binario que fue generado en el arbol, en base al texto orginal, se replaza cada caracter con su codigo
+        public void GenerarTextoCodigo(Dictionary<string, string> Diccionariocodigos)
+        {
+            foreach (string letra in texto)
+            {
+                TextoEnCodigo += Diccionariocodigos.FirstOrDefault(x => x.Key == letra).Value;
+            }
+
+        }
+        
     }
 }
