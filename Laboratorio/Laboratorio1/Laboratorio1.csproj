@@ -135,6 +135,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ArbolHuffman\ArbolHuff.cs" />
+    <Compile Include="ArbolHuffman\Decomprimir.cs" />
+    <Compile Include="Controllers\ArchivoComprimido.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -175,6 +177,7 @@
     <Content Include="Views\FileUpload\Index.cshtml" />
     <Content Include="Views\ReadText\Read.cshtml" />
     <Content Include="Views\ArbolHuff\MostrarArbol.cshtml" />
+    <Content Include="Views\ArbolHuff\GuardarArchivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

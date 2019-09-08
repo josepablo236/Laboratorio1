@@ -24,10 +24,11 @@ namespace Laboratorio1.Controllers
         public Dictionary<string, int> Diccionario_Caracteres = new Dictionary<string, int>();
         //Recibo los datos de FileUploadController
 
-        public void Read(string filename)
+        public ViewResult Read(string filename)
         {
             List<string> Text_archivo = new List<string>();
             var path = Path.Combine(Server.MapPath("~/Archivo"), filename);
+            var FilePath = Server.MapPath("~/Archivo");
             using (var stream = new FileStream(path, FileMode.Open))
             {
                 using (var reader = new BinaryReader(stream))
@@ -53,9 +54,30 @@ namespace Laboratorio1.Controllers
             }
             ArbolHuff arbol = new ArbolHuff();
             //Manda a llamar el metodo del arbol en el que agrega a una lista de nodos, los distintos caracteres que existen
-            arbol.agregarNodos(Diccionario_Caracteres, Text_archivo, listadeNodos);
-         
-         }
-        
+            arbol.agregarNodos(Diccionario_Caracteres, Text_archivo, listadeNodos, FilePath);
+            var items = FilesUploaded();
+            return View(items);
         }
+        private List<string> FilesUploaded()
+        {
+            var dir = new System.IO.DirectoryInfo(Server.MapPath("~/Archivo"));
+            //Unicamente tome los archivos de text, ahorita lo puse como doc para probar pero al final lo podriamos dejar como .txt
+            System.IO.FileInfo[] fileNames = dir.GetFiles("*.huff");
+            //Creo una lista con los nombres de todos los archivos para luego poder mostrarlos
+            List<string> filesupld = new List<string>();
+            foreach (var file in fileNames)
+            {
+                filesupld.Add(file.Name);
+            }
+            //Devuelvo la lista
+            return filesupld;
+        }
+        // Este lo vamos a usar luego que ya podamos descomprimir jajaja
+        public FileResult Download(string TxtName)
+        {
+            var FileVirtualPath = "Archivo/" + TxtName;
+            return File(FileVirtualPath, "application/force- download", Path.GetFileName(FileVirtualPath));
+        }
+
     }
+}

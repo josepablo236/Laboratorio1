@@ -16,8 +16,11 @@ namespace Laboratorio1
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-
+<<<<<<< HEAD
+                defaults: new { controller = "ReadTextController", action = "Index" }
+=======
                 defaults: new { controller = "FileUpload", action = "Index", id = UrlParameter.Optional }
+>>>>>>> cd437ac4c0f391f184783587562d971c187e5de0
             );
         }
     }

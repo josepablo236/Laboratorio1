@@ -20,19 +20,21 @@ multipart/form-data  = tipo de objeto-->
     @ViewBag.Message
     <br>
 
-    <h2>LIST OF FILES</h2>
+    <h2>FILES UPLOADED</h2>
 
     <table>
         <tr>
             <th>Name</th>
-            <th>Link</th>
+            <th>Actions</th>
+            <th></th>
         </tr>
         @for (var i = 0; i <= Model.Count - 1; i++)
         {
             <tr>
                 <td>@Model[i].ToString() </td>
                 <td>@Html.ActionLink("Download", "Download", new { TxtName = @Model[i].ToString() }) </td>
-                <td>@Html.ActionLink("Read", "Read", new { TxtName = @Model[i].ToString() }) </td>
+                <td>    </td>
+                <td>@Html.ActionLink("Comprimir", "Read", new { TxtName = @Model[i].ToString() }) </td>
             </tr>
         }
     </table>
