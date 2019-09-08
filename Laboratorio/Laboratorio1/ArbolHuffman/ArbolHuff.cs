@@ -29,7 +29,7 @@ namespace Laboratorio1.ArbolHuffman
             foreach (var item in Diccionario_Caracteres)
             {
                 var nodotemp = new NodoHuffman();
-                nodotemp.probabilidad = Math.Round((item.Value / Convert.ToDouble(Text_archivo.Count)),5); //Calcula la probabilidad
+                nodotemp.probabilidad = Math.Round((item.Value / Convert.ToDouble(Text_archivo.Count)), 5); //Calcula la probabilidad
                 nodotemp.caracter = item.Key;                             //El caracter es la llave primaria
                 listadeNodos.Add(nodotemp);                               //Agrega cada nuevo nodo a una lista de nodos
             }
@@ -96,9 +96,8 @@ namespace Laboratorio1.ArbolHuffman
                 nodotemp.HijoDerecho = listaNodos[0];
                 Arbol.Add(nodotemp);
                 string lado = "raiz";
-                Codigo(nodotemp, nodotemp,lado);
-                GenerarTextoCodigo(Diccionariocodigos);
                 AgruparTextoCodigo(TextoEnCodigo);
+
             }
         }
         public void AgruparTextoCodigo(string textocodigo)
@@ -109,60 +108,56 @@ namespace Laboratorio1.ArbolHuffman
                 textocodigo = textocodigo.Remove(0, 8);
                 AgruparTextoCodigo(textocodigo);
             }
-            else { TextoAscii.Add(textocodigo); }
-        }
-
-        public void ConvertirAscii(List<string> grupos)
-        {
-            foreach (string group in grupos)
-            {
-                var bytes = Encoding.ASCII.GetBytes(group);
-                string newText = Encoding.ASCII.GetString(bytes);
-                textocodificado += newText;
-            }
-        }
-
-        public bool EsHoja(NodoHuffman nodo)
-        {
-            if (nodo.HijoIzquierdo == null && nodo.HijoIzquierdo == null)
-            { return true; }
-            else { return false; }
 
         }
 
-        public void Codigo(NodoHuffman nodo, NodoHuffman nodopadre, string lado)
+        public void Convertirbytes(List<string> grupos)
         {
-            if (nodo.HijoIzquierdo != null)
+            
+        }
+
+            public bool EsHoja(NodoHuffman nodo)
             {
-                nodo.HijoIzquierdo.codigo = nodo.codigo + "0";
-                Codigo(nodo.HijoIzquierdo, nodo, "iz");
+                if (nodo.HijoIzquierdo == null && nodo.HijoIzquierdo == null)
+                { return true; }
+                else { return false; }
+
             }
-            if (nodo.HijoDerecho != null)
+
+            public void Codigo(NodoHuffman nodo, NodoHuffman nodopadre, string lado)
             {
-                nodo.HijoDerecho.codigo = nodo.codigo + "1";
-                Codigo(nodo.HijoDerecho, nodo,  "der");
-            }
-            if (EsHoja(nodo))
-            {
-                if (lado == "iz")
-                { nodo.codigo = nodopadre.codigo + "0";
-                    Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
+                if (nodo.HijoIzquierdo != null)
+                {
+                    nodo.HijoIzquierdo.codigo = nodo.codigo + "0";
+                    Codigo(nodo.HijoIzquierdo, nodo, "iz");
                 }
-                if (lado == "der")
-                { nodo.codigo = nodopadre.codigo + "1";
-                    Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
+                if (nodo.HijoDerecho != null)
+                {
+                    nodo.HijoDerecho.codigo = nodo.codigo + "1";
+                    Codigo(nodo.HijoDerecho, nodo, "der");
+                }
+                if (EsHoja(nodo))
+                {
+                    if (lado == "iz")
+                    { nodo.codigo = nodopadre.codigo + "0";
+                        Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
+                    }
+                    if (lado == "der")
+                    { nodo.codigo = nodopadre.codigo + "1";
+                        Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
+                    }
                 }
             }
-        }
-        //Agarro cada codigo en binario que fue generado en el arbol, en base al texto orginal, se replaza cada caracter con su codigo
-        public void GenerarTextoCodigo(Dictionary<string, string> Diccionariocodigos)
-        {
-            foreach (string letra in texto)
+            //Agarro cada codigo en binario que fue generado en el arbol, en base al texto orginal, se replaza cada caracter con su codigo
+            public void GenerarTextoCodigo(Dictionary<string, string> Diccionariocodigos)
             {
-                TextoEnCodigo += Diccionariocodigos.FirstOrDefault(x => x.Key == letra).Value;
+                foreach (string letra in texto)
+                {
+                    TextoEnCodigo += Diccionariocodigos.FirstOrDefault(x => x.Key == letra).Value;
+                }
+
             }
 
         }
-        
     }
-}
+
