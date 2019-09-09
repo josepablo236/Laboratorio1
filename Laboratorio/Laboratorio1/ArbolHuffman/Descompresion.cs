@@ -34,11 +34,10 @@ namespace Laboratorio1.Controllers
             textocompleto = textocompleto.Substring(codificado.Length);
             char[] delimiters = new char[] {'[',']', ',', ' '};
             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < textocompleto.Length-1; i+=2)
+            for (int i = 0; i < textocompleto.Length-2; i+=2)
             {
                 Diccionario.Add(parts[i], parts[i + 1]);
             }
-
 
         }
     }
