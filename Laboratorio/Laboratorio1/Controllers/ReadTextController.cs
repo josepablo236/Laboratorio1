@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.IO;
-using System.Text; //Este permite utilizar Encoding
 using Laboratorio1.ArbolHuffman;
 
 namespace Laboratorio1.Controllers
@@ -12,6 +9,7 @@ namespace Laboratorio1.Controllers
     public class ReadTextController : Controller
     {
         List<NodoHuffman> listadeNodos = new List<NodoHuffman>();
+        public string FilePath="";
         const int bufferLength = 1000;
 
         // GET: ReadText
@@ -28,7 +26,7 @@ namespace Laboratorio1.Controllers
         {
             List<string> Text_archivo = new List<string>();
             var path = Path.Combine(Server.MapPath("~/Archivo"), filename);
-            var FilePath = Server.MapPath("~/Archivo");
+            FilePath = Server.MapPath("~/Archivo");
             using (var stream = new FileStream(path, FileMode.Open))
             {
                 using (var reader = new BinaryReader(stream))
@@ -58,6 +56,8 @@ namespace Laboratorio1.Controllers
             var items = FilesUploaded();
             return View(items);
         }
+
+
         private List<string> FilesUploaded()
         {
             var dir = new System.IO.DirectoryInfo(Server.MapPath("~/Archivo"));
@@ -73,11 +73,11 @@ namespace Laboratorio1.Controllers
             return filesupld;
         }
         // Este lo vamos a usar luego que ya podamos descomprimir jajaja
-        public FileResult Download(string TxtName)
+        public void Descomprimir(string TxtName)
         {
-            var FileVirtualPath = "Archivo/" + TxtName;
-            return File(FileVirtualPath, "application/force- download", Path.GetFileName(FileVirtualPath));
+            string filepath = FilePath = Server.MapPath("~/Archivo");
+            Descompresion descomprimir = new Descompresion();
+            descomprimir.LeerArchivo(TxtName, FilePath);
         }
-
     }
 }
