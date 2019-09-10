@@ -120,6 +120,9 @@ namespace Laboratorio1.ArbolHuffman
                     }
                 }
             }
+            //AMBOS METODOS EN EL MISMO ARCHVO - /nombre: ArchivoComprimido.huff
+            //Escribir texto comprimido 1ra linea
+            //Diccionario segunda
             var pathF = Path.Combine(FilePath, "Archivo.huff");
             using (var writeStream2 = new FileStream(pathF, FileMode.OpenOrCreate))
             {
