@@ -35,20 +35,28 @@ namespace Laboratorio1.Controllers
                     Str.Close();
                 }
             }
-            string[]  palabras = textocompleto.Split(' ');
+            string[]  palabras = textocompleto.Split('|');
             string codificado = palabras[0];
             textocompleto = textocompleto.Substring(codificado.Length);
             string[] delimiters = new string[] { "[ ", "]", ", ", "|" };
             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[0].Substring(0, 1) == " ")
+                {
+                    parts[0] = parts[0].Substring(1, parts[0].Length-1);
+            }
+            }
+            
             /* char[] delimiters = new char[] { '[', ']', ',', ' ' };
              string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
              */
+             
              for (int i = 0; i < parts.Length-1; i += 2)
              {
-                 Diccionario.Add(parts[i], parts[i + 1].Remove(0,1));
+                 Diccionario.Add(parts[i].Remove(0, 1), parts[i + 1]);
              }
-           
             int bufferLength = textocompleto.Length - 1;
             var byteBuffer = new byte[bufferLength];
             using (var stream = new FileStream(path, FileMode.Open))
@@ -81,10 +89,15 @@ namespace Laboratorio1.Controllers
             string Text_Descomprimido = "";
             for (int i = 1; i < Text_Binario.Length; i++)
             {
-                if (Diccionario.ContainsKey(Text_Binario.Substring(inicial, i)))
+                if (Text_Binario.Substring(inicial, i) == " ")
                 {
-                    Text_Descomprimido += Diccionario.Where(x => x.Key == Text_Binario.Substring(inicial, i));
-                    inicial = Text_Descomprimido.Length;
+                    inicial++;
+                }
+                string temp = Text_Binario.Substring(inicial, i);
+                if (Diccionario.ContainsValue(temp))
+                {
+                    Text_Descomprimido += Diccionario.FirstOrDefault(x => x.Value == temp).Key;
+                    inicial = Text_Descomprimido.Length-1;
                 }
               
             }

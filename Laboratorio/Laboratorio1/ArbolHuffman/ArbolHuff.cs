@@ -118,7 +118,9 @@ namespace Laboratorio1.ArbolHuffman
                     {
                         writer2.Write(item);
                     }
+                    writer2.Close();
                 }
+                
             }
             //AMBOS METODOS EN EL MISMO ARCHVO - /nombre: ArchivoComprimido.huff
             //Escribir texto comprimido 1ra linea
