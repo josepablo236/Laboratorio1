@@ -88,8 +88,8 @@ namespace Laboratorio1.ArbolHuffman
                 //Se ordena nuevamente encontrar nuevamente los 2 mas pequeños
                 //La función es recursiva, hasta que en la lista unicamente queden menos de 2 nodos
                 AgregarNodoAlArbol(listaNodos);
-
             }
+
             else
             {
                 NodoHuffman nodotemp = new NodoHuffman();
