@@ -34,12 +34,12 @@ namespace Laboratorio1.Controllers
             textocompleto = textocompleto.Substring(codificado.Length);
             char[] delimiters = new char[] {'[',']', ',', ' '};
             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
             for (int i = 0; i < textocompleto.Length-2; i+=2)
             {
                 Diccionario.Add(parts[i], parts[i + 1]);
             }
-=======
+//=======
             for (int i = 0; i < parts.Length; i++)
             {
                 if (parts[0].Substring(0, 1) == " ")
@@ -110,8 +110,13 @@ namespace Laboratorio1.Controllers
              textocompleto = textocompleto.Substring(codificado.Length);
              char[] delimiters = new char[] {'[',']', ',', ' '};
              string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);*/
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
+        }
+
+        private string DecimalToBinary(string item)
+        {
+            throw new NotImplementedException();
         }
     }
 }
