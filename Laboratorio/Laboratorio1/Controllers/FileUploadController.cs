@@ -70,11 +70,7 @@ namespace Laboratorio1.Controllers
         }
 
         // Este lo vamos a usar luego que ya podamos descomprimir jajaja
-        public FileResult Download(string TxtName)
-        {
-            var FileVirtualPath = "Archivo/" + TxtName;
-            return File(FileVirtualPath, "application/force- download", Path.GetFileName(FileVirtualPath));
-        }
+
         public ActionResult Read(string TxtName)
         {
 

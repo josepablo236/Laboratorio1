@@ -120,7 +120,7 @@ namespace Laboratorio1.ArbolHuffman
                     }
                 }
             }
-            var pathF = Path.Combine(FilePath, "Archivo.huff");
+            var pathF = Path.Combine(FilePath, "ArchivoComprimido.huff");
             using (var writeStream2 = new FileStream(pathF, FileMode.OpenOrCreate))
             {
                 using (var writer = new BinaryWriter(writeStream2))
@@ -137,7 +137,7 @@ namespace Laboratorio1.ArbolHuffman
         }
         public ActionResult GuardarArchivo()
         {
-            string archivo = "Archivo.huff";
+            string archivo = "ArchivoComprimido.huff";
             return View(archivo);
         }
 
@@ -189,12 +189,12 @@ namespace Laboratorio1.ArbolHuffman
         public void GenerarTextoCodigo(Dictionary<string, string> Diccionariocodigos)
         {
             foreach (string letra in texto)
-                {
+            {
                     TextoEnCodigo += Diccionariocodigos.FirstOrDefault(x => x.Key == letra).Value;
-                }
-
             }
 
         }
+
     }
+}
 

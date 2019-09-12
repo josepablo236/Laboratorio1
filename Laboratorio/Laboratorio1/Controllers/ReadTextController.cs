@@ -72,6 +72,8 @@ namespace Laboratorio1.Controllers
             //Devuelvo la lista
             return filesupld;
         }
+
+
         // Este lo vamos a usar luego que ya podamos descomprimir jajaja
         public void Descomprimir(string TxtName)
         {
