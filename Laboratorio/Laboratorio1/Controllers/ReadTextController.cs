@@ -81,7 +81,7 @@ namespace Laboratorio1.Controllers
         }
         public FileResult Download(string TxtName)
         {
-            var FileVirtualPath = "Archivo/" + TxtName;
+            var FileVirtualPath = "Archivo/" + "ArchivoComprimido.huff";
             return File(FileVirtualPath, "application/force- download", Path.GetFileName(FileVirtualPath));
         }
     }

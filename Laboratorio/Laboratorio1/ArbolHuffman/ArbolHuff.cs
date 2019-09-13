@@ -184,7 +184,7 @@ namespace Laboratorio1.ArbolHuffman
                         }
                         if (reader.BaseStream.Position == reader.BaseStream.Length)
                         {
-                            writer2.Write("|");
+                            writer2.Write("||");
                             foreach (var item in Diccionariocodigos)
                             {
                                 writer2.Write(item);

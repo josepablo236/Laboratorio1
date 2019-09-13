@@ -29,7 +29,7 @@ namespace Laboratorio1.Controllers
                     textocompleto = reader.ReadToEnd();
                 }
             }
-            string[] palabras = textocompleto.Split('|');
+            string[] palabras = textocompleto.Split(new string[] { "||"}, StringSplitOptions.None);
             string codificado = palabras[0];
             textocompleto = textocompleto.Substring(codificado.Length + 1);
             char[] delimiters = new char[] { '[', ']', ',', ' ' };
@@ -94,7 +94,6 @@ namespace Laboratorio1.Controllers
 
             }
             string Texto = Text_Descomprimido;
-
         }
 
         //Convertir a Binario
