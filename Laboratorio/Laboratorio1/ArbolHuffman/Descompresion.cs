@@ -24,39 +24,29 @@ namespace Laboratorio1.Controllers
             var result = new Dictionary<string, string>();
             using (var stream = new FileStream(path, FileMode.Open))
             {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        textocompleto = reader.ReadToEnd();
-                    }
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    textocompleto = reader.ReadToEnd();
+                }
             }
-            string[]  palabras  =  textocompleto.Split(' ');
+            string[] palabras = textocompleto.Split('|');
             string codificado = palabras[0];
-            textocompleto = textocompleto.Substring(codificado.Length);
-            char[] delimiters = new char[] {'[',']', ',', ' '};
+            textocompleto = textocompleto.Substring(codificado.Length + 1);
+            char[] delimiters = new char[] { '[', ']', ',', ' ' };
             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-//<<<<<<< Updated upstream
-            for (int i = 0; i < textocompleto.Length-2; i+=2)
-            {
-                Diccionario.Add(parts[i], parts[i + 1]);
-            }
-//=======
+
             for (int i = 0; i < parts.Length; i++)
             {
                 if (parts[0].Substring(0, 1) == " ")
                 {
-                    parts[0] = parts[0].Substring(1, parts[0].Length-1);
+                    parts[0] = parts[0].Substring(1, parts[0].Length - 1);
+                }
             }
-            }
-            
-            /* char[] delimiters = new char[] { '[', ']', ',', ' ' };
-             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
-             */
-             
-             for (int i = 0; i < parts.Length-1; i += 2)
-             {
-                 Diccionario.Add(parts[i].Remove(0, 1), parts[i + 1]);
-             }
+            for (int i = 0; i < parts.Length - 1; i += 2)
+            {
+                Diccionario.Add(parts[i], parts[i + 1]);
+            }
             int bufferLength = textocompleto.Length - 1;
             var byteBuffer = new byte[bufferLength];
             using (var stream = new FileStream(path, FileMode.Open))
@@ -66,7 +56,7 @@ namespace Laboratorio1.Controllers
                 using (var reader = new BinaryReader(stream))
                 {
 
-                  
+
                     byteBuffer = reader.ReadBytes(bufferLength);
 
                     foreach (var item in byteBuffer)
@@ -79,7 +69,7 @@ namespace Laboratorio1.Controllers
                     }
                 }
             }
-            string Text_Binario="";
+            string Text_Binario = "";
             //Obtengo el texto en binario
             foreach (var item in Text_archivo)
             {
@@ -87,9 +77,9 @@ namespace Laboratorio1.Controllers
             }
             int inicial = 0; //en que posicion del Text_Binario comenzara a comparar
             string Text_Descomprimido = "";
-            int tamano = 1; bool salirse = false;
+            int tamano = 1;
 
-            while ((inicial+tamano)<=Text_Binario.Length) //Mientras no se finalice el Text_Binario
+            while ((inicial + tamano) <= Text_Binario.Length) //Mientras no se finalice el Text_Binario
             {
                 string temp = Text_Binario.Substring(inicial, tamano); //Si el primer caracter no se encuentra en el diccionario, voy tomando en cada vuelta 1 mas hasta encontra un similar
                 if (Diccionario.ContainsValue(temp)) //si si se encuentra en el diccionario
@@ -101,22 +91,28 @@ namespace Laboratorio1.Controllers
                     tamano = 1;
                 }
                 else { tamano++; }
-                
+
             }
             string Texto = Text_Descomprimido;
-            /* TextoCodificado = 
-             string[]  palabras  =  textocompleto.Split(' ');
-             string codificado = palabras[0];
-             textocompleto = textocompleto.Substring(codificado.Length);
-             char[] delimiters = new char[] {'[',']', ',', ' '};
-             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);*/
-//>>>>>>> Stashed changes
 
         }
 
-        private string DecimalToBinary(string item)
+        //Convertir a Binario
+        static string DecimalToBinary(string n)
         {
-            throw new NotImplementedException();
+            int N = Convert.ToInt32(n); //Lo convierto a un int
+            string binario = Convert.ToString(N, 2); //lo convierto en un string de base 2
+            int tamano = binario.Length;
+            //Ya que cada numero en decimal debe de ocupar 8 posiciones, si el numero en binario es menor a ese tamaño, se le agregan 0 a la derecha
+            if (binario.Length < 8)
+            {
+                for (int i = 0; i < (8 - tamano); i++)
+                {
+                    binario = "0" + binario;
+                }
+            }
+            return binario;
         }
+
     }
 }

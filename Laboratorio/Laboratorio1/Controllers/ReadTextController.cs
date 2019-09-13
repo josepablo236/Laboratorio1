@@ -9,8 +9,8 @@ namespace Laboratorio1.Controllers
     public class ReadTextController : Controller
     {
         List<NodoHuffman> listadeNodos = new List<NodoHuffman>();
-        public string FilePath="";
-        const int bufferLength = 1000;
+        public string FilePath = "";
+        const int bufferLength = 32000;
 
         // GET: ReadText
         public ActionResult Index()
@@ -72,8 +72,6 @@ namespace Laboratorio1.Controllers
             //Devuelvo la lista
             return filesupld;
         }
-
-
         // Este lo vamos a usar luego que ya podamos descomprimir jajaja
         public void Descomprimir(string TxtName)
         {
@@ -88,3 +86,4 @@ namespace Laboratorio1.Controllers
         }
     }
 }
+

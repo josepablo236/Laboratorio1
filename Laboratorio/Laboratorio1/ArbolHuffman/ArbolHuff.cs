@@ -14,6 +14,7 @@ namespace Laboratorio1.ArbolHuffman
         public double EPSILON { get; private set; }
         public object Covert { get; private set; }
         const int bufferLength = 8;
+        const int bufferLeerLength = 1000;
         public static List<NodoHuffman> listaNodos;
         List<NodoHuffman> Arbol = new List<NodoHuffman>();
         List<NodoHuffman> ArbolCodigos = new List<NodoHuffman>();
@@ -24,7 +25,7 @@ namespace Laboratorio1.ArbolHuffman
         List<string> TextoAscii = new List<string>();
         List<string> textocodificado = new List<string>();
         string FilePath;
-       
+
 
         //Recibe el string de caracteres y los agrega a un dicctionario, con su respectiva probabilidad y caracter, para luego crear los nodos
         public void agregarNodos(Dictionary<string, int> Diccionario_Caracteres, List<string> Text_archivo, List<NodoHuffman> listadeNodos, string path)
@@ -51,7 +52,7 @@ namespace Laboratorio1.ArbolHuffman
             throw new NotImplementedException();
         }
 
-//CREAR ARBOL EN BASE A SU PROBABILIDAD
+        //CREAR ARBOL EN BASE A SU PROBABILIDAD
         public void AgregarNodoAlArbol(List<NodoHuffman> listadeNodos)
         {
             OrdenamientoListaNodos(listadeNodos);
@@ -101,44 +102,97 @@ namespace Laboratorio1.ArbolHuffman
                 nodotemp.HijoDerecho = listaNodos[0];
                 Arbol.Add(nodotemp);
                 string lado = "raiz";
-                Codigo(nodotemp, nodotemp,lado);
+                Codigo(nodotemp, nodotemp, lado);
                 GenerarTextoCodigo(Diccionariocodigos);
                 Agrupar();
             }
         }
-//ESCRIBIR Y CREAR ARCHIVO .HUFF CON EL TEXTO COMPRIMIDO Y DICCIONARIO
-        public void Agrupar()
+
+        //ASIGNAR A CADA NODO SU CODIGO EN BASE A SU POSICION EN EL ARBOL, EN UN DICCIONARIO SE GUARDA EL CODIGO DE CADA HOJA
+        public void Codigo(NodoHuffman nodo, NodoHuffman nodopadre, string lado)
         {
-            var path = Path.Combine(FilePath, "Diccionario.huff");
-            using (var writeStream1 = new FileStream(path, FileMode.OpenOrCreate))
+            if (nodo.HijoIzquierdo != null)
+            {
+                nodo.HijoIzquierdo.codigo = nodo.codigo + "0";
+                Codigo(nodo.HijoIzquierdo, nodo, "iz");
+            }
+            if (nodo.HijoDerecho != null)
+            {
+                nodo.HijoDerecho.codigo = nodo.codigo + "1";
+                Codigo(nodo.HijoDerecho, nodo, "der");
+            }
+            if (EsHoja(nodo))
+            {
+                if (lado == "iz")
                 {
-                using (var writer2 = new StreamWriter(writeStream1))
+                    nodo.codigo = nodopadre.codigo + "0";
+                    Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
+                }
+                if (lado == "der")
                 {
-                    foreach (var item in Diccionariocodigos)
-                    {
-                        writer2.Write(item);
-                    }
+                    nodo.codigo = nodopadre.codigo + "1";
+                    Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
                 }
             }
-            var pathF = Path.Combine(FilePath, "ArchivoComprimido.huff");
-            using (var writeStream2 = new FileStream(pathF, FileMode.OpenOrCreate))
+        }
+
+        public bool EsHoja(NodoHuffman nodo)
+        {
+            if (nodo.HijoIzquierdo == null && nodo.HijoIzquierdo == null)
+            { return true; }
+            else { return false; }
+
+        }
+
+        //Agarro cada codigo en binario que fue generado en el arbol, en base al texto orginal, se replaza cada caracter con su codigo
+        public void GenerarTextoCodigo(Dictionary<string, string> Diccionariocodigos)
+        {
+            foreach (string letra in texto)
             {
-                using (var writer = new BinaryWriter(writeStream2))
+                TextoEnCodigo += Diccionariocodigos.FirstOrDefault(x => x.Key == letra).Value;
+            }
+
+        }
+
+        //ESCRIBIR Y CREAR ARCHIVO .HUFF CON EL TEXTO COMPRIMIDO Y DICCIONARIO
+        public void Agrupar()
+        {
+            var path = Path.Combine(FilePath, "ArchivoComprimido.huff");
+            using (var writeStream1 = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using (var writer = new BinaryWriter(writeStream1))
                 {
                     List<Byte> listabytes = StringToBytes(TextoEnCodigo);
-
                     foreach (var item in listabytes)
                     {
                         writer.Write(item);
                     }
+                    writer.Close();
+                }
+                writeStream1.Close();
+            }
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    using (var writer2 = new StreamWriter(stream))
+                    {
+                        var byteBufferLeer = new byte[bufferLeerLength];
+                        while (reader.BaseStream.Position != reader.BaseStream.Length)
+                        {
+                            byteBufferLeer = reader.ReadBytes(bufferLeerLength);
+                        }
+                        if (reader.BaseStream.Position == reader.BaseStream.Length)
+                        {
+                            writer2.Write("|");
+                            foreach (var item in Diccionariocodigos)
+                            {
+                                writer2.Write(item);
+                            }
+                        }
+                    }
                 }
             }
-            
-        }
-        public ActionResult GuardarArchivo()
-        {
-            string archivo = "ArchivoComprimido.huff";
-            return View(archivo);
         }
 
         //CONVERTIR EL TEXTO CON SU CODIGO A BYTES 
@@ -147,54 +201,28 @@ namespace Laboratorio1.ArbolHuffman
             List<Byte> byteList = new List<Byte>();
             for (int i = 0; i < data.Length; i += 8)
             {
-                byteList.Add(Convert.ToByte(data.Substring(i, 8), 2));
+                if (data.Length - i >= 8)
+                {
+                    byteList.Add(Convert.ToByte(data.Substring(i, 8), 2));
+                }
+                else
+                {
+                    string binario = "0000000";
+                    string temp = binario.Substring(0, 8 - (data.Length - i)) + data.Substring(i, data.Length - i);
+                    byteList.Add(Convert.ToByte(temp, 2));
+                }
+
             }
 
             return byteList;
         }
-    
-        public bool EsHoja(NodoHuffman nodo)
-        {
-            if (nodo.HijoIzquierdo == null && nodo.HijoIzquierdo == null)
-                { return true; }
-                else { return false; }
 
-            }
-//ASIGNAR A CADA NODO SU CODIGO EN BASE A SU POSICION EN EL ARBOL, EN UN DICCIONARIO SE GUARDA EL CODIGO DE CADA HOJA
-        public void Codigo(NodoHuffman nodo, NodoHuffman nodopadre, string lado)
-            {
-                if (nodo.HijoIzquierdo != null)
-                {
-                    nodo.HijoIzquierdo.codigo = nodo.codigo + "0";
-                    Codigo(nodo.HijoIzquierdo, nodo, "iz");
-                }
-                if (nodo.HijoDerecho != null)
-                {
-                    nodo.HijoDerecho.codigo = nodo.codigo + "1";
-                    Codigo(nodo.HijoDerecho, nodo, "der");
-                }
-                if (EsHoja(nodo))
-                {
-                    if (lado == "iz")
-                    { nodo.codigo = nodopadre.codigo + "0";
-                        Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
-                    }
-                    if (lado == "der")
-                    { nodo.codigo = nodopadre.codigo + "1";
-                        Diccionariocodigos.Add(nodo.caracter, nodo.codigo);
-                    }
-                }
-            }
-//Agarro cada codigo en binario que fue generado en el arbol, en base al texto orginal, se replaza cada caracter con su codigo
-        public void GenerarTextoCodigo(Dictionary<string, string> Diccionariocodigos)
+        public ActionResult GuardarArchivo()
         {
-            foreach (string letra in texto)
-            {
-                    TextoEnCodigo += Diccionariocodigos.FirstOrDefault(x => x.Key == letra).Value;
-            }
-
+            string archivo = "Archivo.huff";
+            return View(archivo);
         }
-
     }
 }
+
 
