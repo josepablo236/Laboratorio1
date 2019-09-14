@@ -16,6 +16,7 @@ namespace Laboratorio1.Controllers
         {
             //Guardaremos la letra y cuantas veces se repite
             string[] texto;
+            List<Byte> byteList = new List<Byte>();
             string textocompleto;
             Dictionary<string, string> Diccionario = new Dictionary<string, string>();
             string FileP = filepath;
@@ -81,16 +82,17 @@ namespace Laboratorio1.Controllers
                 if (Diccionario.ContainsValue(temp)) //si si se encuentra en el diccionario
                 {
                     var tempo = Diccionario.FirstOrDefault(x => x.Value == temp).Key; //Tomo le valor en decimal
-                    var strFinal = (char)Convert.ToInt32(tempo); //Lo convierto a letra
-                    Text_Descomprimido += strFinal.ToString(); //Se concatena al Text_Descomprimido
+                    byteList.Add(Convert.ToByte(tempo));
+                    //Text_Descomprimido += tempo; //Se concatena al Text_Descomprimido
                     inicial = inicial + temp.Length;  //Esto significa que ahora tendra que comenzr a comparar a partir de esa posicion en adelanta 
                     tamano = 1;
                 }
                 else { tamano++; }
 
             }
-            string Texto = Text_Descomprimido;
-            EscribirDescompresion(Texto, filepath);
+            //string Texto = Text_Descomprimido;
+            //EscribirDescompresion(Texto, filepath);
+            EscribirDescompresion(byteList, filepath);
         }
 
         //Convertir a Binario
@@ -112,14 +114,14 @@ namespace Laboratorio1.Controllers
 
 
         //Escribir Archivo Descomprimido
-        public void EscribirDescompresion(string texto, string filepath)
+        public void EscribirDescompresion(List<byte> ListaBytes, string filepath)
         {
             var path = Path.Combine(filepath, "ArchivoDescomprimido.huff");
             using (var writeStream1 = new FileStream(path, FileMode.OpenOrCreate))
             {
                 using (var writer = new BinaryWriter(writeStream1))
                 {
-                    foreach (var item in texto)
+                    foreach (var item in ListaBytes)
                     {
                         writer.Write(item);
                     }
