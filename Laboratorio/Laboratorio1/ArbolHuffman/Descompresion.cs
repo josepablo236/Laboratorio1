@@ -22,6 +22,7 @@ namespace Laboratorio1.Controllers
             List<string> Text_archivo = new List<string>();
             var path = Path.Combine(FileP, textname);
             var result = new Dictionary<string, string>();
+
             using (var stream = new FileStream(path, FileMode.Open))
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -29,9 +30,9 @@ namespace Laboratorio1.Controllers
                     textocompleto = reader.ReadToEnd();
                 }
             }
-            string[] palabras = textocompleto.Split(new string[] { "||"}, StringSplitOptions.None);
+            string[] palabras = textocompleto.Split(new string[] { "||" }, StringSplitOptions.None);
             string codificado = palabras[0];
-            textocompleto = textocompleto.Substring(codificado.Length + 1);
+            textocompleto = textocompleto.Substring(codificado.Length + 2);
             char[] delimiters = new char[] { '[', ']', ',', ' ' };
             string[] parts = textocompleto.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
@@ -47,7 +48,7 @@ namespace Laboratorio1.Controllers
             {
                 Diccionario.Add(parts[i], parts[i + 1]);
             }
-            int bufferLength = textocompleto.Length - 1;
+            int bufferLength = codificado.Length;
             var byteBuffer = new byte[bufferLength];
             using (var stream = new FileStream(path, FileMode.Open))
             {
@@ -55,16 +56,11 @@ namespace Laboratorio1.Controllers
                 List<string> Textarchivo = new List<string>();
                 using (var reader = new BinaryReader(stream))
                 {
-
-
                     byteBuffer = reader.ReadBytes(bufferLength);
 
                     foreach (var item in byteBuffer)
                     {//El delimitador entre el diccionario y el texto comprimido es una barra | 
-                        if (item.ToString() == "124")
-                        {
-                            break;
-                        }
+
                         Text_archivo.Add(Convert.ToString(item));
                     }
                 }
@@ -94,6 +90,7 @@ namespace Laboratorio1.Controllers
 
             }
             string Texto = Text_Descomprimido;
+            EscribirDescompresion(Texto, filepath);
         }
 
         //Convertir a Binario
@@ -113,5 +110,21 @@ namespace Laboratorio1.Controllers
             return binario;
         }
 
+
+        //Escribir Archivo Descomprimido
+        public void EscribirDescompresion(string texto, string filepath)
+        {
+            var path = Path.Combine(filepath, "ArchivoDescomprimido.huff");
+            using (var writeStream1 = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                using (var writer = new BinaryWriter(writeStream1))
+                {
+                    foreach (var item in texto)
+                    {
+                        writer.Write(item);
+                    }
+                }
+            }
+        }
     }
 }

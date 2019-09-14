@@ -24,6 +24,7 @@ namespace Laboratorio1.ArbolHuffman
         string TextoEnCodigo;
         List<string> TextoAscii = new List<string>();
         List<string> textocodificado = new List<string>();
+
         string FilePath;
 
 
