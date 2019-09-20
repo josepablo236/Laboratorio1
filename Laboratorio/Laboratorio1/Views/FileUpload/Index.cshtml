@@ -1,6 +1,5 @@
 ﻿<h2>SUBIR EL ARCHIVO .TXT</h2>
 @model List<string>
-
 <!--Form:
 Index = Es el metodo al que vamos a llamar
 FileUpload = El controlador donde se encuentra el metodo Index
@@ -33,7 +32,8 @@ multipart/form-data  = tipo de objeto-->
             <tr>
                 <td>@Model[i].ToString() </td>
                 <td>    </td>
-                <td>@Html.ActionLink("Comprimir", "Read", new { TxtName = @Model[i].ToString() }) </td>
+                <td>@Html.ActionLink("ComprimirHuff", "Read", new { TxtName = @Model[i].ToString() }) </td>
+                <td>@Html.ActionLink("ComprimirLZW", "ReadLZ", new { TxtName = @Model[i].ToString() }) </td>
             </tr>
         }
     </table>
