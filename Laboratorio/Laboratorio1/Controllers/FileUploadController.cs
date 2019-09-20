@@ -56,7 +56,7 @@ namespace Laboratorio1.Controllers
 
         private List<string> FilesUploaded()
         {
-             var dir = new System.IO.DirectoryInfo(Server.MapPath("~/Archivo"));
+            var dir = new System.IO.DirectoryInfo(Server.MapPath("~/Archivo"));
             //Unicamente tome los archivos de text, ahorita lo puse como doc para probar pero al final lo podriamos dejar como .txt
             System.IO.FileInfo[] fileNames = dir.GetFiles("*.txt");
             //Creo una lista con los nombres de todos los archivos para luego poder mostrarlos
@@ -75,6 +75,12 @@ namespace Laboratorio1.Controllers
         {
 
             return RedirectToAction("Read", "ReadText", new { filename = TxtName });
+
+        }
+        public ActionResult ReadLZ(string TxtName)
+        {
+
+            return RedirectToAction("ReadLZ", "ReadText", new { filename = TxtName });
 
         }
     }
